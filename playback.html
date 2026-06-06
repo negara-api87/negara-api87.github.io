@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>SliceDrive - Video Player</title>
     <style>
         /* Reset & Base Styles */
@@ -167,7 +168,7 @@
 
     <main>
         <div class="video-container">
-            <video id="myPlayer" controls poster="https://via.placeholder.com/720x405/000000/FFFFFF?text=Loading+Video...">
+            <video id="myPlayer" controls playsinline="" preload="metadata">
                 <source id="videoSource" src="" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -192,24 +193,18 @@
 
         // Base URL dari CDN videy milik Anda
         const cdnBaseUrl = "https://cdn2.videy.co/";
-
-        if (videoId) {
-            // Jika ID ditemukan (misal: tes123), gabungkan menjadi URL video penuh
-            const finalVideoUrl = cdnBaseUrl + videoId + ".mp4";
-            
-            // Ubah source video dan muat ulangnya
-            videoSource.src = finalVideoUrl;
-            
-            // Opsional: Mengubah teks poster placeholder agar bersih atau sesuai ID
-            videoPlayer.setAttribute('poster', 'https://via.placeholder.com/720x405/000000/FFFFFF?text=Click+to+Play');
-            
-            // Perintahkan browser untuk reload komponen video dengan source baru
-            videoPlayer.load();
-        } else {
-            // Jika tidak ada parameter ?v= di URL, tampilkan pesan error di poster
-            videoPlayer.setAttribute('poster', 'https://via.placeholder.com/720x405/000000/FFFFFF?text=Video+Not+Found');
-        }
     </script>
-
+   <!-- Histats.com  START  (aync)-->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,5009868,4,0,0,0,00010000']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5009868&101" alt="" border="0"></a></noscript>
+<!-- Histats.com  END  -->
 </body>
 </html>
