@@ -168,7 +168,7 @@
 
     <main>
         <div class="video-container">
-            <video id="myPlayer" controls playsinline="" preload="metadata">
+            <video id="myPlayer" controls>
                 <source id="videoSource" src="" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -183,17 +183,25 @@
     </footer>
 
     <script>
-        // 1. Ambil query parameter (?v=...) dari URL browser
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('v');
 
-        // 2. Ambil elemen video dan source
         const videoPlayer = document.getElementById('myPlayer');
         const videoSource = document.getElementById('videoSource');
 
-        // Base URL dari CDN videy milik Anda
         const cdnBaseUrl = "https://cdn2.videy.co/";
+
+        if (videoId) {
+            const finalVideoUrl = cdnBaseUrl + videoId + ".mp4";
+            
+            videoSource.src = finalVideoUrl;
+            videoPlayer.load(); // Memuat video secara otomatis berdasarkan ID
+        } else {
+            // Jika tidak ada ID, video tetap hitam polos atau Anda bisa mengosongkannya
+            console.log("Video ID tidak ditemukan di URL.");
+        }
     </script>
+    
    <!-- Histats.com  START  (aync)-->
 <script type="text/javascript">var _Hasync= _Hasync|| [];
 _Hasync.push(['Histats.start', '1,5009868,4,0,0,0,00010000']);
