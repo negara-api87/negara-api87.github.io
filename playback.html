@@ -1,271 +1,215 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta name="referrer" content="no-referrer-when-downgrade" />
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Playback</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SliceDrive - Video Player</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-<style>
-html,body{
-  margin:0;
-  height:100%;
-  background:#000;
-  overflow:hidden;
-  font-family:sans-serif;
-  color:#fff;
-}
-#ad-b{
-  display:auto;
-  position:absolute;
-  width:100%;
-  z-index:40;
-  pointer-events:auto;
-}
-#ad-t{
-  display:auto;
-  position:absolute;
-  top:60px;
-  width:100%;
-  z-index:999;
-  pointer-events:auto;
-}
-#ad-b{ bottom:85px }
-#viewport{
-  position:relative;
-  height:100vh;
-  width:100%;
-}
-video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.overlay{
-  position:absolute;
-  bottom:90px;
-  left:14px;
-}
-.user{font-weight:bold;margin-bottom:6px}
-.caption{font-size:14px}
-.right{
-  position:absolute;
-  right:12px;
-  bottom:110px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:16px;
-}
-.right img{
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  border:2px solid #fff;
-}
-.icon{text-align:center;font-size:13px}
-.swipe{
-  position:absolute;
-  bottom:24px;
-  width:100%;
-  text-align:center;
-  opacity:.8;
-}
-</style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0b132b;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-upload {
+            background-color: #0b132b;
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-upload:hover {
+            background-color: #1c2541;
+        }
+
+        /* Main Content Area */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Video Container (16:9 Black Box) */
+        .video-container {
+            width: 100%;
+            max-width: 720px;
+            background-color: #000000;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Action Link Below Video */
+        .action-link {
+            margin-top: 25px;
+            font-size: 15px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.1s ease;
+        }
+
+        .action-link:hover {
+            text-decoration: underline;
+            color: #1d4ed8;
+        }
+
+        /* Footer */
+        footer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        footer a {
+            color: #888888;
+            font-size: 12px;
+            text-decoration: none;
+            transition: color 0.1s ease;
+        }
+
+        footer a:hover {
+            color: #555555;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .btn-upload {
+                padding: 6px 16px;
+                font-size: 13px;
+            }
+
+            main {
+                justify-content: flex-start;
+                padding-top: 10px;
+            }
+
+            .video-container {
+                max-width: 100%;
+                border-radius: 0;
+            }
+            
+            .action-link {
+                margin-top: 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-<script src="https://petsrulefondness.com/c3/0f/95/c30f95c6ec142ccb4bb31b28081b8c13.js"></script>
 
-<div id="viewport">
-  <video id="video" playsinline autoplay muted></video>
-  <div class="overlay">
-    <div class="user" id="user">@username</div>
-<script>
-  atOptions = {
-    'key' : 'dfff630905c9957df2ae4d66c3f1db55',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://petsrulefondness.com/dfff630905c9957df2ae4d66c3f1db55/invoke.js"></script>
-    <div class="caption" id="caption">🔥 Viral video</div>
-  </div>
-  <div class="right">
-    <img id="avatar">
-    <div class="icon">❤️<span id="like">12K</span></div>
-    <div class="icon">💬<span id="comment">321</span></div>
-  </div>
-  <div class="swipe">⬆ Swipe up for next video</div>
-</div>
+    <header>
+        <a href="#" class="logo">SliceDrive</a>
+        <a href="#" class="btn-upload">Upload</a>
+    </header>
 
-<script>
-const videos = JSON.parse(localStorage.getItem("VIDEO_LIST") || "[]");
-let index = parseInt(localStorage.getItem("START_INDEX") || 0);
+    <main>
+        <div class="video-container">
+            <video id="myPlayer" controls poster="https://via.placeholder.com/720x405/000000/FFFFFF?text=Loading+Video...">
+                <source id="videoSource" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
 
-/* ELEMENT */
-const video = document.getElementById("video");
-const user = document.getElementById("user");
-const avatar = document.getElementById("avatar");
-const like = document.getElementById("like");
-const comment = document.getElementById("comment");
-const caption = document.getElementById("caption");
+        <a href="#" class="action-link">Continue to see more</a>
+    </main>
 
-const adTop = document.getElementById("ad-t");
-const adBottom = document.getElementById("ad-b");
+    <footer>
+        <a href="#">Terms of Service</a>
+        <a href="#">Report Abuse</a>
+    </footer>
 
-/* RANDOM */
-const captions=[
-  "no words, just ice spice.😍💦",
-  "Her silhouette is insane 👀🙈",
-  "confidence that holds its center",
-  "Looking cute in yellow 💛",
-  "need help with the laundry?",
-  "No way she didn’t care😈 ",
-  "Touching the lines is perfect 👌",
-  "this feels really sincere somehow",
-  "The pink hair really makes her pretty 😍",
-  "However the only reason",
-  "remake with me",
-  "Gen Z can’t breathe without filming it 🙈💱",
-  "Unforgettable bestie moments",
-  "What did I just watch",
-  "I didn’t plan this vibe it happened",
-  "she’s effortlessly beautiful",
-  "Stoppit",
-  "some things are easy to lean into",
-  "are the freckles cute or no",
-  "this clip resurfaces every season",
-  "would you like this in your backseat instead?",
-  "The long rocket pierced my throat",
-  "At this moment, nothing else matters 🙂‍↔️🙂‍↔️",
-  "i’m an unexpected twist",
-  "I am short of words 😳",
-  "Hard work looks so good on you",
-  "The tiny room makes this feel way funnier",
-  "skip the safety manual and come play with me",
-  "Some moments are unforgettable when he’s driving",
-  "hair like that deserves its own show",
-  "the look feels strong",
-  "this feels confidently owned",
-  "beauty that feels intentional 😍"
-];
-function rand(a,b){return Math.floor(Math.random()*(b-a))+a}
+    <script>
+        // 1. Ambil query parameter (?v=...) dari URL browser
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = urlParams.get('v');
 
-/* ===== IKLAN CONTROL ===== */
-let swipeCount = 0;
-let lastSwipeTime = 0;
-let adTimer = null;
-let allowAds = false;
+        // 2. Ambil elemen video dan source
+        const videoPlayer = document.getElementById('myPlayer');
+        const videoSource = document.getElementById('videoSource');
 
-/* tampilkan iklan dengan delay pintar */
-function showAdsSmart(){
-  if(!allowAds) return;
+        // Base URL dari CDN videy milik Anda
+        const cdnBaseUrl = "https://cdn2.videy.co/";
 
-  clearTimeout(adTimer);
-  adTimer = setTimeout(()=>{
-    adTop.style.display="auto";
-    adBottom.style.display="auto";
-  }, 2500); // ⏱️ delay aman 2.5 detik
-}
-
-/* sembunyikan iklan */
-function hideAds(){
-  /* social bar JANGAN di-hide */
-  adBottom.style.display="auto";
-}
-
-/* ===== LOAD VIDEO ===== */
-function loadVideo(i){
-  const v = videos[i];
-  if(!v) return;
-
-  video.src = v.src;
-  video.play();
-
-  user.innerText = v.user;
-  avatar.src = "https://i.pravatar.cc/150?img="+rand(1,70);
-  like.innerText = rand(1,99)+"K";
-  comment.innerText = rand(10,999);
-  caption.innerText = captions[rand(0,captions.length)];
-
-  history.replaceState({}, "", "playback.html?vid="+v.user.replace("@",""));
-
-  swipeCount++;
-
-function showAdsSmart(){
-  if(!allowAds) return;
-
-  clearTimeout(adTimer);
-  adTimer = setTimeout(()=>{
-    /* social bar tampil SEKALI */
-    if(adTop.style.display!=="auto"){
-      adTop.style.display="auto";
-    }
-
-    /* iframe iklan aman */
-    adBottom.style.display="auto";
-  }, 2500);
-}
-}
-
-/* ===== TAP UNMUTE + AKTIFKAN IKLAN ===== */
-document.body.addEventListener("click",()=>{
-  video.muted=false;
-  video.play();
-  allowAds = true; // ✅ user interaction nyata
-},{once:true});
-
-/* ===== SWIPE DETECT ===== */
-let startY=0;
-document.addEventListener("touchstart",e=>{
-  startY = e.touches[0].clientY;
-});
-
-document.addEventListener("touchend",e=>{
-  const endY = e.changedTouches[0].clientY;
-  const now = Date.now();
-  const swipeSpeed = now - lastSwipeTime;
-  lastSwipeTime = now;
-
-  /* kalau swipe cepat → hide iklan */
-  if(swipeSpeed < 500){
-    hideAds();
-  }
-
-  if(startY-endY>60){
-    index=(index+1)%videos.length;
-    loadVideo(index);
-  }
-  if(endY-startY>60){
-    index=(index-1+videos.length)%videos.length;
-    loadVideo(index);
-  }
-});
-
-/* ===== START ===== */
-if(videos.length){
-  loadVideo(index);
-}else{
-  alert("VIDEO_LIST kosong, buka dari index.html");
-}
-</script>
-
-<script src="https://petsrulefondness.com/f9/a8/dd/f9a8dd2f7d8a6dfa74102ceb697548a1.js"></script>
+        if (videoId) {
+            // Jika ID ditemukan (misal: tes123), gabungkan menjadi URL video penuh
+            const finalVideoUrl = cdnBaseUrl + videoId + ".mp4";
+            
+            // Ubah source video dan muat ulangnya
+            videoSource.src = finalVideoUrl;
+            
+            // Opsional: Mengubah teks poster placeholder agar bersih atau sesuai ID
+            videoPlayer.setAttribute('poster', 'https://via.placeholder.com/720x405/000000/FFFFFF?text=Click+to+Play');
+            
+            // Perintahkan browser untuk reload komponen video dengan source baru
+            videoPlayer.load();
+        } else {
+            // Jika tidak ada parameter ?v= di URL, tampilkan pesan error di poster
+            videoPlayer.setAttribute('poster', 'https://via.placeholder.com/720x405/000000/FFFFFF?text=Video+Not+Found');
+        }
+    </script>
 
 </body>
 </html>
-    <!-- Histats.com  START  (aync)-->
-<script type="text/javascript">var _Hasync= _Hasync|| [];
-_Hasync.push(['Histats.start', '1,4992245,4,511,95,18,00000000']);
-_Hasync.push(['Histats.fasi', '1']);
-_Hasync.push(['Histats.track_hits', '']);
-(function() {
-var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
-hs.src = ('//s10.histats.com/js15_as.js');
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-})();</script>
-<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4992245&101" alt="" border="0"></a></noscript>
-<!-- Histats.com  END  -->
