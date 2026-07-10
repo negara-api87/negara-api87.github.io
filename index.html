@@ -183,7 +183,7 @@ body {
 <body>
 
 <div class="container">
-  <a id="dynamic-link" href="#" style="text-decoration: none;">
+  <a id="dynamic-link" style="text-decoration: none;">
     <div class="thumbnail">
       <div class="badge">Trending</div>
       <div class="play-btn">
@@ -204,7 +204,7 @@ body {
     </span>
   </div>
   
-  <a id="action-btn" href="https://aaronmwalephotography.github.io/?id=" class="action-btn">Play Video</a>
+  <a id="action-btn" href="#" class="action-btn">Play Video</a>
 </div>
 
 <script type="text/javascript">
@@ -212,16 +212,13 @@ body {
     const url = window.location;
     let id = '';
 
-    // Parameter standard URLSearchParams (?id=kqvCk45l1)
     const urlParams = new URLSearchParams(url.search);
     if (urlParams.has('id')) {
       id = urlParams.get('id');
     } 
-    // Parameter tanpa key (?kqvCk45l1)
     else if (url.search && !url.search.includes('=')) {
       id = url.search.substring(1);
     } 
-    // Berdasarkan Pathname (/kqvCk45l1)
     else {
       const path = url.pathname.replace(/^\/|\/$/g, '');
       if (path && path !== 'index.html' && path !== 'playback.html') {
@@ -229,14 +226,8 @@ body {
       }
     }
 
-    // Jika ID ditemukan, ganti href pada kedua link target (thumbnail & tombol)
     if (id) {
       const targetUrl = "https://aaronmwalephotography.github.io/?id=" + id;
-      
-      const dynamicLink = document.getElementById('dynamic-link');
-      if (dynamicLink) {
-        dynamicLink.href = targetUrl;
-      }
 
       const actionBtn = document.getElementById('action-btn');
       if (actionBtn) {
